@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+        <link rel="stylesheet" type="text/css" href="resources/horsey.min.css">
+        <link rel="stylesheet" type="text/css" href="resources/ol3-search-layer.min.css">
+        <link href="resources/ol-geocoder.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+        <style>
+                    html, body {
+                background-color: #f4f4f9;
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            .header {
+                background-color: #ec407a;
+                color: white;
+                text-align: center;
+                padding: 60px 15px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .header h1 {
+                margin: 0;
+                font-size: 36px;
+            }
+            .navbar {
+                background-color:#ec407a;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        position: fixed; /* Membuat navbar tetap di atas */
+        top: 0; /* Menyelaraskan navbar ke atas */
+        width: 100%; /* Memastikan lebar navbar mengikuti lebar layar */
+        z-index: 1000; 
+            }
+
+            .navbar a {
+                color: white;
+                padding: 14px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: block;
+                font-size: 18px;
+            }
+
+            .navbar a:hover {
+                background-color: #575757;
+            }
+
+            .description {
+                padding: 20px;
+                font-size: 16px;
+                line-height: 1.6;
+                background-color: #fff;
+                margin: 20px auto;
+                max-width: 800px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: justify;
+            }
+
+            .description h2 {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 15px;
+            }
+
+            #map {
+                width: 100%;
+                height: 500px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                margin-top: 20px;
+            }
+            .description-image {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto 20px; /* Untuk menempatkan gambar di tengah dan memberikan jarak ke bawah */
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+            .map-container {
+                width: 80%;
+                margin: 30px auto;
+                padding: 15px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .about {
+                padding: 20px;
+                font-size: 16px;
+                line-height: 1.6;
+                background-color: #fff;
+                margin: 20px auto;
+                max-width: 800px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                text-align: justify;
+            }
+
+            .footer {
+                text-align: center;
+                padding: 10px;
+                font-size: 14px;
+                background-color: #ec407a;
+                color: white;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .ol-control > * {
+                background-color: #f8f8f8!important;
+                color: #444444!important;
+                border-radius: 0px;
+            }
+
+            .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+                color: #444444!important;
+            }
+
+            .search-layer-input-search {
+                background-color: #f8f8f8!important;
+            }
+
+            .ol-control > :focus, .ol-control >:hover {
+                background-color: rgba(248, 248, 248, 0.7)!important;
+            } 
+
+            .ol-control {
+                background-color: rgba(255,255,255,.4) !important;
+                padding: 2px !important;
+            }
+
+        </style>
+        <title>Peta Desa Sokaraja Tengah</title>
+    </head>
+    <body>
+          <body>
+        <!-- Bagian Header -->
+        <div class="header">
+            <h1>Selamat Datang Di Desa Sokaraja Tengah </h1>
+          
+        </div>
+
+        <!-- Bagian Navbar -->
+        <div class="navbar">
+            <a href="#deskripsi">Deskripsi</a>
+            <a href="#peta">Peta</a>
+            <a href="#tentang">Tentang</a>
+        </div>
+
+        <!-- Bagian Deskripsi Kelurahan -->
+        <div class="description" id="deskripsi">
+            <h2>Deskripsi Desa Sokaraja Tengah</h2>
+            <img class="description-image" src="data:image/jpeg;base64,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" alt="Gambar Kantor Kelurahan">
+            <p>Desa Sokaraja Tengah terletak di Kecamatan Sokaraja, Kabupaten Banyumas, Provinsi Jawa Tengah. Desa ini berada di wilayah strategis dekat pusat kecamatan dan menjadi penghubung antara Kota Purwokerto dengan daerah lain di Banyumas. Secara geografis, Sokaraja Tengah memiliki kontur wilayah datar yang cocok untuk aktivitas pertanian, pemukiman, dan kegiatan ekonomi lainnya. Desa ini menawarkan suasana pedesaan yang asri, dengan lingkungan yang mendukung kehidupan masyarakat yang harmonis.
+            </p>
+            <p>Kehidupan sosial dan budaya di Desa Sokaraja Tengah sangat kaya akan tradisi lokal khas Banyumasan. Bahasa Jawa dengan dialek Banyumas menjadi bahasa sehari-hari masyarakatnya, sementara tradisi seni seperti wayang kulit dan gamelan masih lestari. Sebagian besar penduduknya beragama Islam, dengan tradisi keagamaan yang kental, seperti pengajian dan perayaan hari besar Islam. Kehidupan sosial masyarakat di desa ini mencerminkan kearifan lokal yang masih terjaga dengan baik.
+            </p>
+        </div>
+       
+            <h2>Peta Interaktif Desa Sokaraja Tengah</h2>
+    
+
+        <!-- Bagian Peta Interaktif dalam Box -->
+        <div class="map-container" id="peta">
+            <div id="map">
+                <div id="popup" class="ol-popup">
+                    <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                    <div id="popup-content"></div>
+                </div>
+            </div>
+        </div>
+
+           <!-- Bagian Tentang Peta -->
+           <div class="about" id="tentang">
+            <h2>Tentang Peta Desa Sokaraja Tengah</h2>
+            <p>Peta Desa Sokaraja Tengah mencerminkan gambaran wilayah administratif dan geografis desa yang terletak di Kecamatan Sokaraja, Kabupaten Banyumas, Jawa Tengah. Peta ini menampilkan batas-batas administratif desa yang berbatasan dengan desa lain di sekitarnya, yang berguna untuk pengelolaan wilayah dan pelayanan masyarakat. Desa ini memiliki jaringan jalan yang terhubung dengan jalur utama di Sokaraja, memudahkan mobilitas penduduk dan akses menuju fasilitas umum seperti pasar, sekolah, masjid, dan puskesmas.</p>
+            <p>Selain itu, peta Desa Sokaraja Tengah biasanya mencantumkan detail penggunaan lahan, seperti area persawahan, kebun, dan pemukiman penduduk, yang mencerminkan aktivitas perekonomian masyarakat. Desa ini memiliki potensi pertanian yang cukup luas, didukung oleh adanya sistem irigasi yang mungkin terlihat dalam peta sebagai aliran sungai atau saluran air. Lokasinya yang strategis, dekat dengan pusat Kecamatan Sokaraja, juga menjadikan desa ini mudah diakses dan memiliki peran penting dalam mendukung aktivitas perdagangan lokal, terutama produk khas seperti getuk goreng. </p>
+            <p>Peta ini berguna untuk berbagai keperluan, seperti perencanaan pembangunan, pengelolaan sumber daya, hingga promosi pariwisata. Untuk melihat versi digital, peta Desa Sokaraja Tengah dapat diakses melalui Google Maps, Google Earth, atau melalui data resmi dari pemerintah desa atau Kabupaten Banyumas.</p>
+        </div>
+
+        <!-- Footer Dibuat oleh -->
+        <div class="footer">
+            <p> © 2024 || Peta Desa Sokaraja Tengah || Dibuat oleh: Nada Salsabila Khansa</p>
+        </div>
+
+        <script src="resources/qgis2web_expressions.js"></script>
+<script src="resources/proj4.js"></script>
+        <script>proj4.defs('EPSG:4326','+proj=longlat +datum=WGS84 +no_defs');</script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="resources/horsey.min.js"></script>
+        <script src="resources/ol3-search-layer.js"></script>
+        <script src="./resources/ol-layerswitcher.js"></script>
+        <script src="resources/ol-geocoder.js"></script>
+        <script src="layers/ADMINISTRASIDESA_AR_25K_1.js"></script><script src="layers/RtRw_2.js"></script><script src="layers/skjtengahshp_poly_3.js"></script><script src="layers/skjtengahshp_line_4.js"></script><script src="layers/lapanganpoly_5.js"></script><script src="layers/pemakamanpoly_6.js"></script><script src="layers/jalan_7.js"></script><script src="layers/kost_8.js"></script><script src="layers/tobongbata_9.js"></script><script src="layers/sawahh_10.js"></script><script src="layers/lapangan_11.js"></script><script src="layers/gerejaa_12.js"></script><script src="layers/kuburan_13.js"></script><script src="layers/rumahmakan_14.js"></script><script src="layers/toko_15.js"></script><script src="layers/barber_16.js"></script><script src="layers/bengkel_17.js"></script><script src="layers/ptgudang_18.js"></script><script src="layers/kesehatan_19.js"></script><script src="layers/pasar_20.js"></script><script src="layers/masjid_21.js"></script><script src="layers/kantor_22.js"></script><script src="layers/rumah_23.js"></script><script src="layers/sekolah_24.js"></script><script src="layers/polsek_25.js"></script>
+        <script src="styles/ADMINISTRASIDESA_AR_25K_1_style.js"></script><script src="styles/RtRw_2_style.js"></script><script src="styles/skjtengahshp_poly_3_style.js"></script><script src="styles/skjtengahshp_line_4_style.js"></script><script src="styles/lapanganpoly_5_style.js"></script><script src="styles/pemakamanpoly_6_style.js"></script><script src="styles/jalan_7_style.js"></script><script src="styles/kost_8_style.js"></script><script src="styles/tobongbata_9_style.js"></script><script src="styles/sawahh_10_style.js"></script><script src="styles/lapangan_11_style.js"></script><script src="styles/gerejaa_12_style.js"></script><script src="styles/kuburan_13_style.js"></script><script src="styles/rumahmakan_14_style.js"></script><script src="styles/toko_15_style.js"></script><script src="styles/barber_16_style.js"></script><script src="styles/bengkel_17_style.js"></script><script src="styles/ptgudang_18_style.js"></script><script src="styles/kesehatan_19_style.js"></script><script src="styles/pasar_20_style.js"></script><script src="styles/masjid_21_style.js"></script><script src="styles/kantor_22_style.js"></script><script src="styles/rumah_23_style.js"></script><script src="styles/sekolah_24_style.js"></script><script src="styles/polsek_25_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/Autolinker.min.js"></script>
+        <script src="./resources/qgis2web.js"></script>
+    </body>
+</html>
